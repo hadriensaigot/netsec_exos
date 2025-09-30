@@ -37,13 +37,17 @@ Second, a DDOS attack if some servers starts sending BGP packets to some AS boar
 > [2] RAPTOR: Routing Attacks on Privacy in Tor <https://www.usenix.org/node/190965>
 
 _Solution_:
-[1] 1) A man-in-the-middle attack inorder to get bogus certificate from a trusted CA. 
+[1] 
+
+1) A man-in-the-middle attack inorder to get bogus certificate from a trusted CA. 
 Mitigation : Add multiple vantage CAs server for adding decentralization into the network. 
 
  2) A prefix IP hijacking to re route the victim's range of IP addresses.  
 Mitigation : Authorizing lower range of IP address in the prefix to help identifying the source's address.
 
-[2] The attack targets the TOR netowrk vulnerable at both ends of its flow. It uses the correlation between packets processing time and their size.
+[2] 
+
+1) The attack targets the TOR netowrk vulnerable at both ends of its flow. It uses the correlation between packets processing time and their size.
 Mitigation : Identifying exit and guard TOR relays via frequency and time heurisitc for doing data encryption.  
 
 ### Question 2 (10 points)
