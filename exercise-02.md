@@ -60,7 +60,8 @@ Mitigation : Identifying exit and guard TOR relays via frequency and time heuris
 
 _Solution_:
 (SWITCH, AS559)
-ADD PIC
+
+![OSPF network](assets/ospf-network.png)
 
 **2.2.** (3 points)
 > Describe three design shortcomings of traditional BGP. What does BGP lack?
