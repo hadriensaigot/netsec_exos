@@ -22,7 +22,8 @@ The hand-in procedure is as follows:
 > For full points, also briefly explain their practical impact on society and mitigation stategies.
 
 _Solution_:
-Your solution here...
+First ISP hijacking such that some ISP tells the sender he's reaching out some other ISP so the traffic gets redirected to the second ISP. 
+Second, a DDOS attack if some servers starts sending BGP packets to some AS boarder routers at a rate it is no more able to process. 
 
 **1.2.** (4 points)
 > There have been diverse types of research related to routing attacks.
@@ -36,7 +37,14 @@ Your solution here...
 > [2] RAPTOR: Routing Attacks on Privacy in Tor <https://www.usenix.org/node/190965>
 
 _Solution_:
-Your solution here...
+[1] 1) A man-in-the-middle attack inorder to get bogus certificate from a trusted CA. 
+Mitigation : Add multiple vantage CAs server for adding decentralization into the network. 
+
+ 2) A prefix IP hijacking to re route the victim's range of IP addresses.  
+Mitigation : Authorizing lower range of IP address in the prefix to help identifying the source's address.
+
+[2] The attack targets the TOR netowrk vulnerable at both ends of its flow. It uses the correlation between packets processing time and their size.
+Mitigation : Identifying exit and guard TOR relays via frequency and time heurisitc for doing data encryption.  
 
 ### Question 2 (10 points)
 **Securing BGP**
@@ -47,29 +55,38 @@ Your solution here...
 > For the second point, try to make the test succeed and paste a screenshot of a successful run. *Hint: perhaps another ISP could work, such as by using Cloudflare's free VPN?*
 
 _Solution_:
-Your solution here...
+(SWITCH, AS559)
+ADD PIC
 
 **2.2.** (3 points)
 > Describe three design shortcomings of traditional BGP. What does BGP lack?
+>
 > 
 > Focus on the security of routes and the availability guarantees of BGP, and list the currently proposed countermeasures, if any.
 
 _Solution_:
-Your solution here...
+First, it lacks security measure for identifying the request IP address. Second, it does not support congestion algorithm.  Third it has no understanding 
+of a wider network topoloy for re-routing the request it receives. 
+
+Countermeasures : 
+1. Adding a signature for the client request and verifying if it actually matches a trusted certificate authority.
+2. Can regulates the performance by inspecting the packet's size and the bandwidth available.
+3. Can maintain a table mapping the routers of the AS it is discovering with a dietannce.
 
 **2.3.** (3 points)
 > What is ROA(route origin authorization)? Briefly explain how it works and
 > against what attacks it is effective.
 
 _Solution_:
-Your solution here...
+A ROA states which AS is authorized to announce certain IP prefixes. It can sepcify the maximum IP prefiix IP prefix sime AS is authorized to advertise.
+They are safe, distributed and checked out-of-band. It works as follow : first check if a ROA exists for the message, second check if it matches the AS entry of the message.
 
 **2.4.** (2 points)
 > Why is it not possible for a malicious AS to add another AS to a path in
 > BGPSec?
 
 _Solution_:
-Your solution here...
+BGPsec prevents from path pretendiing of one AS to another AS because it must check the sgnature of the other ASes sittng next to it. 
 
 ### Question 3 (5 points)
 **BGP: TCP RST Attack**
@@ -88,7 +105,9 @@ Your solution here...
 > connection reset attack?
 
 _Solution_:
-Your solution here...
+After an attacker sends a TCP RST packet two routers would need to dscover each other back
+through a TCP three way handhsake adding a delay. To mitigate a TCP connection reset attack, the 
+AS needs to authenticate the routers.
 
 **3.2.** (2 points)
 > Imagine that in the previous example, the routers started using BGPSec.
@@ -97,7 +116,7 @@ Your solution here...
 > connections to live traffic jumps to several seconds. Explain why.
 
 _Solution_:
-Your solution here...
+In fact BGPsec adds latency for communication because it adds an additional layer of security mechanisms.
 
 **3.3.** (1 points)
 > When making forwarding decisions, BGP routers use longest prefix
@@ -109,7 +128,7 @@ Your solution here...
 > for every IP address. Why is this a bad idea?
 
 _Solution_:
-Your solution here...
+It is not scalable if every AS annonce the route, because there are too many routes to be kept for each IP. 
 
 ### Question 4 (6 points)
 **BGP: Recent attacks (1)**
@@ -126,21 +145,23 @@ about the details of the outage. <br>
 > What was the reason for the outage?
 
 _Solution_:
-Your solution here...
+This outage was triggered by the system that manages the global backbone network capacity.
 
 **4.3.** (2 points)
 > List any two ways an attacker could have abused this situation where Facebook
 > BGP advertisements are gone.
 
 _Solution_:
-Your solution here...
+When Facebook BGPs advertisement were gone, an attacker could have advertsed Facebook prefixes
+to another AS for DDOS. Or the attacker could have performed a man-in-the-mddle attack.
 
 **4.4.** (2 points)
 > Would these attacks also be possible with BGPsec deployed globally? Argue
 > why or why not.
 
 _Solution_:
-Your solution here...
+BGPsec can protect from MITM attack as it uuses ROA keys so not everyone can advertse Facebook's routes.
+DDOS is still possible with  BGPsec aware AS because it uses no signature to work. 
 
 ### Question 5 (9 points)
 **Recent BGP Attacks (2)**
