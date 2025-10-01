@@ -184,7 +184,8 @@ A recent BGP attack led to the theft of 1.9 millions worth of crypto from the So
 > How did the attackers manage to serve malicious code to KLAYswap clients?
 
 _Solution_:
-Your solution here...
+The attacker used BGP hijacking to serve a prefix IP address within the routing table to a malicious code sitting in its sever that originally was serving KLAYswap clients.
+Indeed a malicious code download disguised as a Kakao SDK file was caused by a network attack.
 
 **5.1.2.** (2 points)
 > Even if the attacker managed to redirect the clients from the legitimate KLAYswap server to its own,
@@ -193,7 +194,9 @@ Your solution here...
 > How could the attacker have managed to obtain a certificate for KLAYswap?
 
 _Solution_:
-Your solution here...
+The attacker issued and registered a free temporary 3-month certificate for the developers[.]kakao.com domain through SSL certificate issuer called ZeroSSL. 
+Because the routing policy (which AS advertse which IP) was already manipulated by the BGP Hijacking, the attacker was able to register the certificate and thus accept 
+the client's connection.
 
 **5.2.** (5 points)
 KLAYswap is only one of the many incidents related to BPG hijacking. 
@@ -208,18 +211,20 @@ Let's look at the BGP hijack that allowed this attack in more details.
 > if they announced the ownership of `44.192.0.0/10`?
 
 _Solution_:
-Your solution here...
+Yes — almost certainly not. Because BGP routing follows the longest prefix match rule, an announcement of /24 would override a more general /10 route for the same IP space. 
+If the attacker instead announced 44.192.0.0/10, that is a much less specific route than an existing more specific route (e.g. /24), so routers would prefer the legitimate more specific route, and the hijack would fail.
 
 **5.2.2.** (2 points)
 > Amazon uses RPKI and had a ROA for the prefix that was hijacked, so why didn’t RPKI ROA help here?
 > What trick did the attackers use to circumvent this defense measure?
 
 _Solution_:
-Your solution here...
+RPKI only validates that a prefix is announced by an authorized AS, but in this case the attackers didn’t create a new unauthorized prefix — instead they announced a more specific /24 inside Amazon’s larger, validly signed /18 block. Since Amazon’s ROA allowed announcements up to /24, the hijack appeared legitimate to RPKI validators. This “sub-prefix hijack” trick let the attackers bypass RPKI protections while still diverting traffic.
 
 **5.2.3.** (1 points)
 > Suppose Amazon set a maximum prefix length to be `11` in the ROA. Would the bogus announcement
 > have been blocked?
 
 _Solution_:
-Your solution here...
+Yes — if Amazon’s ROA set maxLength = 11, the attacker’s /24 would be RPKI-invalid because the ROA would only authorize 
+prefixes up to /11 (so any more-specific /24 announcement would not be covered).
