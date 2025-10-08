@@ -22,13 +22,15 @@ concisely the following questions.
 > does it do?
 
 _Solution_:
-Your solution here...
+The control plane constructs and disseminates the path along which a packet has to 
+go in the network topology. 
 
 **1.2.** (2 points)
 > What is the data (or “forwarding”) plane? What does it do?
 
 _Solution_:
-Your solution here...
+The data plane combine the path information of a packet so that each router can 
+correctly forward the data to the correct next hop.
 
 ### Question 2 (7 points)
 **SCION vs IP**
@@ -38,14 +40,16 @@ Your solution here...
 > happens instead in SCION? A sentence or two for each is enough.
 
 _Solution_:
-Your solution here...
+When it reached a border router the IP packet is inspected and given the IP 
+prefix it contains, the router will send to the next router which annonces the
+target IP prefix via heuristics (?). Instead in SCION, the path is already known so the router annonces the next hop the packet has to go to directly.
 
 **2.2.** (2 points)
 > How do those different routing architectures influence the size of a
 > packet?
 
 _Solution_:
-Your solution here...
+The size of a packet is bigger in SCION because it contains the path segments that is used to build the entire path whereas an IP packet will certainly only contain the next destination IP.
 
 **2.3.** (1 points)
 > Consider this scenario: network failure interrupts an inter-AS link, and
@@ -57,14 +61,14 @@ Your solution here...
 > end-hosts.)
 
 _Solution_:
-Your solution here...
+The end-hosts does not know the ASes identities, so they will encounter a bigger latency while communicating because the ASes have to first re-discover themself before sending packet among each other. The end-hosts will not be aware of this as they use the same IPs addresses despite the network failure.
 
 **2.4.** (2 points)
 > Consider the same setting as above in SCION: what are the differences?
 > Can you think of an advantage of this approach?
 
 _Solution_:
-Your solution here...
+In SCION all the paths between ASes are stored in the server of the AS communicating and because of the multi-path nature of SCION the end-hosts will not have extra work to do for the transmission. 
 
 ### Question 3 (6 points)
 **SCION vs BGP**
@@ -74,13 +78,13 @@ Your solution here...
 > (A sentence or two for each is enough.)
 
 _Solution_:
-Your solution here...
+In BGP the server is advertising for a prefix range and the avaibility of the paths are determined by an economic factor. In SCION the paths are stored in a local server and the availability depends on many other factors like latency, bandwidth or carbon intensity.
 
 **3.2.** (2 points)
 > What happens when a link fails in BGP and SCION?
 
 _Solution_:
-Your solution here...
+In BGP if a link fails it will retry possibly on the same link but in SCION it will use another link.
 
 **3.3.** (2 points)
 > One key property of BGP is that ASes influence how traffic is routed
@@ -88,7 +92,7 @@ Your solution here...
 > routed?
 
 _Solution_:
-Your solution here...
+In SCION the ASes control how packets are routed via the packet control plane.
 
 ### Question 4 (10 points)
 In this exercise, we take a closer look at the control plane
@@ -98,28 +102,31 @@ implementation of SCION.
 > What is an ISolation Domain (ISD)? What is a Core AS?
 
 _Solution_:
-Your solution here...
+An Isolation Domain is a sub-network consisting of multiple ASes that communicate frequently like a country. A core AS is the AS that is responsible for communicating with other core ASes in different ISD.
 
 **4.2.** (4 points)
 > Explain what is beaconing and how the distribution of PCBs (Path-segment
 > Construction Beacon) works.
 
 _Solution_:
-Your solution here...
+Core ASes initiate Path-segment Construction Beacons, PCBs traverse ISD as a flood to reach downstream ASes, each AS receives path segments to a core AS.
 
 **4.3.** (3 points)
 > What is a path segment? Why is it called that way? What is the
 > difference between up, down and core path segments?
 
 _Solution_:
-Your solution here...
+A path segment is a part of a path, it is called that way because it is smalled then a path and is used to build up a path. 
+Down-path segment : from core AS to AS.
+Up-path segment : from AS to core AS.
+Core-path segment : between two core ASes.
 
 **4.4.** (1 points)
 > Each AS has its own path server. There are regular ASes and core ASes.
 > After beaconing, what type of path segments do each of them store? (excluding caches at various levels)
 
 _Solution_:
-Your solution here...
+Up-path segments are registered at local path servers. Path servers provide a lookup service for segments to an AS. Down-path segment are uploaded to core path server in core AS after beaconing.
 
 ### Question 5 (7 points)
 **About the Project**
@@ -169,7 +176,7 @@ Your solution here...
 > additional flexibility of FABRID to select paths?
 
 _Solution_:
-Your solution here...
+Some realistic settings is for security purposes like apply this stronger encryption policy over this link because it is not secrued enough.
 
 **5.4.** (2 points)
 > One can argue FABRID exposes internal details of intermediary AS
@@ -177,4 +184,4 @@ Your solution here...
 > argument to make?
 
 _Solution_:
-Your solution here...
+It is a bad argument because FABRID only exposes the way of how a link should behave while transmitting a packet which tells nothing about the actual content of it.
