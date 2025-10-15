@@ -21,19 +21,24 @@ The hand-in procedure is as follows:
 > severity?
 
 _Solution_:
-Your solution here...
+Three types of DDos attacks are : Volumetric attack, Protocol attack, Application-Layer attack.
+The first attacks the network links, the second attacks network devices (networking stack) and the 
+third attacks the applications (end system of the network). For each one of them the units of 
+severity are respectively : bits per second, packet per second, request per second.
 
 **1.2.** (2 points)
 > Name some representative attack vectors for each of the 3 types of DDoS.
 
 _Solution_:
-Your solution here...
+For Volumetric attack a representative attack vector is UDP packet flood.
+For Protocol attack a representative attack vector is TCP flood.
+For Application-layer attack a representative attack vector is Database flood pool exhaustion.
 
 **1.3.** (2 points)
 > What kind of attacks are the most difficult to detect? Why do you think so?
 
 _Solution_:
-Your solution here...
+Application-Layer attacks are the most difficult to detect because the malicious requests look like legitimate user traffic, they are using correct headers, valid TLS, and normal-looking request patterns so volume or signature-based network detectors often miss them.
 
 ### Question 2 (4 points)
 **Volumetric Attacks: Shrew Attack**
@@ -60,7 +65,8 @@ may make it easier to answer questions):
 > Can you think of how they might do this?
 
 _Solution_:
-Your solution here...
+They send very short, high-intensity bursts timed to cause loss across many TCP flows but keep the bursts infrequent enough that the average attack rate is low.
+By aligning the burst period with TCP's retransmission-timeout behavior on many connections so the throughput collapses and never recovers between pulses while the attacker uses little average bandwidth.
 
 **2.2.** (2 points)
 > The diagram in the figure below provides parameters `l`, `R`, and `T`.
