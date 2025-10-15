@@ -77,7 +77,9 @@ By aligning the burst period with TCP's retransmission-timeout behavior on many 
 > <img src="assets/Square-wave_DoS_stream.png" alt="image" />
 
 _Solution_:
-Your solution here...
+l (length of peak) — Short (≪ T), roughly ≤ RTT. Long enough to overflow the bottleneck queue once and cause packet loss of the sender.
+R (magnitude of peak) — Instantaneous rate > link capacity (C) so packets drop; e.g., R ≳ C + B/l.
+T (period) — About equal to the victim’s TCP RTO (≈ T ≈ RTO), so each new burst hits just as flows retransmit, forcing repeated timeouts.
 
 ### Question 3 (12 points)
 **DDoS: DNS.**
@@ -104,13 +106,17 @@ and answer the questions below:
 > How does a DNS reflection attack work?
 
 _Solution_:
-Your solution here...
+A DNS reflection attack work as follow :
+1. Choose open service (e.g., open DNS resolver) as reflector
+2. Craft request that triggers (much) larger response
+3. Send packet where source address is set to victim’s address
+4. Reflector sends reply to victim
 
 **3.2.** (2 points)
 > Can you give an example of a DNS query which would trigger a big response?
 
 _Solution_:
-Your solution here...
+ANY: a UDP query asking the resolver for all record types it has for a given name (A, AAAA, MX, TXT, RRSIG, …). Many public resolvers now limit, synthesize, or refuse ANY responses because they’re abused for amplification. Or a large DNS zone file so many DNS resolvers would sit between the victim adress and the DNS response server.
 
 **3.3.** (1 points)
 > In this case attackers probably used a request that is \~30 bytes long,
@@ -118,7 +124,7 @@ Your solution here...
 > factor?
 
 _Solution_:
-Your solution here...
+The amplification factor is 100.
 
 **3.4.** (3 points)
 > Write down your local internet's speed, measured with https://fast.com/.
@@ -129,7 +135,8 @@ Your solution here...
 > (2 points)
 
 _Solution_:
-Your solution here...
+It would result in 0.15Gpbs using an amplification factor of 100 given the speed 
+of my connection is 1.5 Mbps.
 
 **3.5.** (3 points)
 > DNS (mainly) uses UDP port 53.
@@ -139,14 +146,15 @@ Your solution here...
 > intercept packets on the links between open DNS servers and the victim.
 
 _Solution_:
-Your solution here...
+The attacker sends a SYN to the server with the victim’s IP as source. The server sends SYN-ACK to the victim IP; because the attacker can intercept the link between server and victim they see (and can suppress) that SYN-ACK and can send the ACK back to the server, completing the handshake. The server now has a valid TCP connection believed to be with the victim and will send its reflected responses answering the attacker's to the victim IP.
 
 **3.6.** (2 points)
 > What is an open recursive DNS resolver? How can you configure it to
 > mitigate DNS reflection & amplification attacks?
 
 _Solution_:
-Your solution here...
+An open recursive DNS resolver is a DNS server that performs recursion for any client on the Internet instead of only trusted ones, allowing attackers to abuse it for reflection and amplification attacks.
+To mitigate this, restrict recursion to authorized networks, enable response rate limiting (RRL), and block or filter unsolicited DNS queries from untrusted sources.
 
 ### Question 4 (7 points)
 Consider an attacker that wants to perform a DDoS attack on a victim server.
@@ -161,7 +169,11 @@ is _unable to spoof source addresses_.
 > and give your answer in the unit of bits per second.
 
 _Solution_:
-Your solution here...
+We take as references :
+TCP header: minimum 160 bits (20 bytes).
+IPv4 header: minimum 160 bits (20 bytes).
+So we thus obtain 10 TCP SYN / second = 10*320 - 3200 bits/second for a botnet.
+The aggregate bandwidth that reaches the victim is 3200 * 10,000,000 = 32,000,000,000 bits/second.
 
 **4.2.** (3 points)
 > Consider a scenario where the victim server uses an address filtering approach.
@@ -173,7 +185,8 @@ Your solution here...
 > But can you think of disadvantages or outstanding issues with this approach?
 
 _Solution_:
-Your solution here...
+Blacklisting botnet IPs can cause false positives, blocking legitimate users who share the same IP or are later assigned a reused address.
+Attackers can evade detection by changing connection request pattern, or using VPNs or NATed networks, making the blacklist quickly outdated and ineffective.
 
 **4.4.** (2 points)
 > Now assume that botnets are capable of spoofing addresses. Consider a
@@ -184,4 +197,7 @@ Your solution here...
 > any two disadvantages of this approach.
 
 _Solution_:
-Your solution here...
+In this approach one disadvantage is that the servers that belong to the service need to 
+periodically download the blacklist which adds latency and can also flood the memory cache.
+If bots spoof source IPs, the blacklist will contain innocent hosts (victims of spoofing), 
+causing widespread false positives and disrupting legitimate clients.
