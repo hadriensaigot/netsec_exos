@@ -34,7 +34,7 @@ PEs stand for Provider Edges (essentially just edge routers), which are
 routers at the edge of ISP networks that connect to external
 users/customers.
 
-![Source-based RTBH<sup>1</sup>](assets/source_based.png)
+![Source-based RTBH<sup>1</sup>](source_based.png)
 
 **1.1.1.** (2 points)
 > Are the ISP network (incl. links) and the target device protected from
@@ -55,7 +55,7 @@ In destination-based RTBH, all the traffic to the target’s subnets is
 dropped by the target’s ISP. This is a quicker solution than
 source-based RTBH, but has its own problems.
 
-![Destination-based RTBH<sup>1</sup>](assets/dest_based.png)
+![Destination-based RTBH<sup>1</sup>](dest_based.png)
 
 **1.2.1.** (2 points)
 > What do you think are the problems with destination-based RTBH? Would you
