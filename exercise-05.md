@@ -41,14 +41,28 @@ users/customers.
 > DoS? Why or why not?
 
 _Solution_:
-Your solution here...
+The ISP network including the links and the target device are protected from volumetric DoS 
+attacks because the edge routers are effectively black-holling the offending traffic.
+Nevertheless the target device is not fully protected from DoS. For example one can stil
+use DoS Protocol attack like SYN/ACK attacks from an undiscovered attacker. Indeed, in
+this case the defense mechanism of the boarder routers cannot detect the malicious act as
+it does not depend of the volume of packet flow.
 
 **1.1.2.** (2 points)
 > Why is this technique hard to implement, in the case of a DDoS attack?
 > Can you imagine which unintended consequences it may have?
 
 _Solution_:
-Your solution here...
+The technique is hard to implement because all the Provider Edges needs to maintain 
+a list of the attacker subnet IPs and do checks for all incoming traffic to see if 
+the traffic should be black-holled or not. Particularly in the case of DDos, multiple
+subnets can be potentially involved, so the boarder edges need to find a way to synchronize
+their findings and put their result together. Indeed, one attacker packet flow to one boarder router
+is not necessarily sufficient to DoS the server. 
+Some unintended consequences are :
+- It adds latency for a fair user-server communication.
+- It can overflow the Provider Edges routers memory and cache by maintaining a large routing table.
+- It adds computation cost for synchronizing the edge routers.
 
 **1.2.** (6 points)
 In destination-based RTBH, all the traffic to the target’s subnets is
@@ -65,7 +79,10 @@ source-based RTBH, but has its own problems.
 > answered correctly for that version, you will still get the points.)
 
 _Solution_:
-Your solution here...
+In destination-based RTBH the traffic to the victim's IP is effectively dropped
+in any case. Anyone willing to send fair packet to the victim can encounter
+packet drop. The identified problem undermines its effectiveness as DoS mitigation
+strategy because it sacrifices availability of the target network.
 
 **1.2.2.** (3 points)
 > Let us now delve into the technical details of destination-based RTBH. In our
@@ -78,14 +95,18 @@ Your solution here...
 > assume iBGP (e.g. OSPF) is used within the ISP infrastructure.
 
 _Solution_:
-Your solution here...
+At the edge routers (PEs) the configuration installed by the trigger router
+is an entry in its routing table of the BGG static route to an unused IP address 
+which then be mapped to a null interface.
 
 **1.2.3.** (1 points)
 > Normally, whenever a packet is dropped, an ICMP message would be sent
 > back to inform the sender. Is this behaviour desirable here? Why?
 
 _Solution_:
-Your solution here...
+No, this behaviour would not be desirable here because it would increase 
+the traffic in the links that are already targeted by the attacker as the 
+ICMP response would make the sender send again its dropped packet to the victim.
 
 ### Question 2 (12 points)
 (D)DoS attacks work by exhausting critical resources. For each attack:
@@ -97,28 +118,50 @@ Your solution here...
 > [Slowloris attack](https://www.incapsula.com/ddos/attack-glossary/slowloris.html)
 
 _Solution_:
-Your solution here...
+1. Web server (server application)
+2. Slowloris attack makes mutliple lightwieght HTTP request (only the HTTP headers)
+to the server at precise intervals so to not close the HTTP session but to keep the
+session open. Eventually it will flood the session pool at the targeted web-sever.
+3. Possible mitigation is to add a limit on the number of possible open connection
+at the server side.
 
 **2.2.** (3 points)
 > Flooding the embedded devices that use public key cryptography for
 > message authentication with random messages.
 
 _Solution_:
-Your solution here...
-
+1. Server device (end-host)
+2. The attack prevents the normal communication by keeping the receiver's server busy computing
+the ciphertext of the authentication message leading to a Dos.
+3. Use sepecific augmented hardware for cryptographic premtives like FOGA.
+   
 **2.3.** (3 points)
 > Sending packets crafted specifically to trigger the worst-case scenario in
 > a hash-map.
 
 _Solution_:
-Your solution here...
+1. A database or cloud service
+2. The attack prevents the normal communication because it
+makes the CPU actively searching for an specific index in the hashtable
+that does not exist so the time of computation is potentially increasing.
+3. Potential mitigations are :
+- Keep a list of hashes from a specific range
+that are not in the table
+- Use another data structure
+- Use faster hash function.
 
 **2.4.** (3 points)
 > [TCP SYN flood attack](https://www.incapsula.com/ddos/attack-glossary/syn-flood.html): sending many TCP SYN requests to the victim
 > server.
 
 _Solution_:
-Your solution here...
+1. The end user using TCP communication protocol
+2. Multiple source devices send a TCP SYN packets to the server, which
+trigger an half open connections set up, the senders never send back the ACK
+leaving them open and possibly exhausting the ressource. 
+3. Potential mitigations are :
+- Filtering based on pattern of SYN packet flood
+- Bufferize the SYN packets and process them according to the ressource availability
 
 ## Crypto refresher
 
@@ -130,7 +173,7 @@ Concisely answer the following questions:
 > Edward wants to prove to Laura he really is the sender of a message. What security property(s) is he trying to achieve?  Which cryptographic primitive could he use?
 
 _Solution_:
-Your solution here...
+He tries to achieve integrity. He could a signature based encryption mechanism.
 
 **1.2.** (2 points)
 > Edward wants to send a secret message to Glenn---they cannot meet to exchange a key, but they deem it unlikely for the NSA to tamper with their messages on the fly ([1]). What security property(s) are Edward and Glenn trying to achieve? Which cryptographic primitives could they use?
@@ -138,20 +181,20 @@ Your solution here...
 > [1]: Not historically accurate
 
 _Solution_:
-Your solution here...
+They can agree on a code book unseen by the NSA to secretely communicate.
 
 **1.3.** (2 points)
 > Edward wants to store records of his job assignments at NSA on his NAS. Which property(s) ensures that nobody will alter the record before it reaches the NAS? Can you name a network protocol which provides this guarantee? (assume a fair use of the protocol)
 
 _Solution_:
-Your solution here...
+To ensure that nobody will alter his job assignements at NSA on Edward's NAS, the network has to ensure integrity so no one can 
+pretend to be Edward when adding a record on the job assignement board.
 
 **1.4.** (2 points)
 > Chelsea wants to share some documents with a journalist, without risking to be identified.  What security property is she trying to achieve?  Can you name a technology that could, in principle, protect her?
 
 _Solution_:
-Your solution here...
-
+Chelsea wants to achieve anonimity, while sharing documents to a journalist she could use Tor or VPN.
 ### Question 2 (2 points)
 
 Challenge question (we did not reach this part during the crypto refresher session. If you are interested, we encourage you to read a little bit about 'Merkle Trees', as they might appear later in the course):
