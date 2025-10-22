@@ -194,7 +194,7 @@ pretend to be Edward when adding a record on the job assignement board.
 > Chelsea wants to share some documents with a journalist, without risking to be identified.  What security property is she trying to achieve?  Can you name a technology that could, in principle, protect her?
 
 _Solution_:
-Chelsea wants to achieve anonimity, while sharing documents to a journalist she could use Tor or VPN.
+Chelsea wants to achieve anonimity, while sharing documents to a journalist she could use Tor or a VPN for using network technology.
 ### Question 2 (2 points)
 
 Challenge question (we did not reach this part during the crypto refresher session. If you are interested, we encourage you to read a little bit about 'Merkle Trees', as they might appear later in the course):
@@ -202,13 +202,13 @@ Challenge question (we did not reach this part during the crypto refresher sessi
 > Given a Merkle Hash Tree with n leaves, how many nodes need to be recomputed if a leaf is updated? (Assume a binary balanced fully populated tree).
 
 _Solution_:
-Your solution here...
+log2(n) + 1 nodes: the updated leaf’s hash plus one ancestor hash per level up to the root (i.e., only the root path is recomputed).
 
 ### Question 3 (2 points)
 > You are using AES in ECB mode to encrypt an uncompressed high-resolution image. What could go wrong?
 
 _Solution_:
-Your solution here...
+ECB reveals patterns: identical plaintext blocks become identical ciphertext blocks, so the image’s structure “shows through” (the classic ECB penguin). It also enables cut-and-paste block manipulation since there’s no randomness or integrity.
 
 ### Question 4 (3 points)
 
@@ -223,4 +223,4 @@ Finally, You also modify the server to now report an error if the padding is inv
 > What could still go wrong?
 
 _Solution_:
-Your solution here...
+Your distinct error messages create a padding oracle: an attacker can tweak ciphertext and learn from “bad padding” vs “bad MAC,” enabling decryption and forgeries despite the MAC (MAC-then-encrypt is vulnerable). You must return a single indistinguishable error and verify integrity before acting—prefer Encrypt-then-MAC or an AEAD mode (e.g., AES-GCM), and authenticate the IV/nonce. Replay is still possible unless you include nonces/counters/timestamps in the MAC.
