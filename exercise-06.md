@@ -20,7 +20,8 @@ The hand-in procedure is as follows:
 > (Note: it’s not a padding oracle)
 
 _Solution_:
-Your solution here...
+If the padding vector is known to everyone, then one can infer the true length 
+of the message sent by substracting the received message length and the padding vector length. A way TLS might remove padding is to implement the ability to sent segments with variable lengths.
 
 ### Question 2 (6 points)
 In the TLS 1.3 record protocol, the per-record nonce is based upon a
@@ -30,7 +31,10 @@ In the TLS 1.3 record protocol, the per-record nonce is based upon a
 > The counter always starts at 0. Why is this not a problem?
 
 _Solution_:
-Your solution here...
+It is not a problem to have a per record nonce based upon a counter which 
+always starts at 0 because the nonce is processed in the AEAD so an attacker 
+cannot infer what number the counter is at.
+
 
 **2.2.** (2 points)
 > Given an average record length of 1000 bytes and a modern connection
@@ -47,7 +51,7 @@ Your solution here...
 > What would happen if some records were to be received out of order?
 
 _Solution_:
-Your solution here...
+If some records are received out of order the server side TLS handler will close the connection because the out of order record won't have the expected counter number in the NONCE after decoding.
 
 ### Question 3 (4 points)
 TLS 1.3 has fixed several vulnerabilities and design problems that plagued
@@ -72,7 +76,7 @@ some key aspects of the protocol.
 > removed?
 
 _Solution_:
-Your solution here...
+In TLS 1.3 the cipher suite no longer specifies the key exchange algorithm and the  signature authentication algorithm. This information was removed because we no longer have different options for key exchange and authentication process, all connections uses the most secured one.
 
 **3.2.** (2 points)
 > The total number of accepted cipher suites, key exchanges, and signature
@@ -80,7 +84,7 @@ Your solution here...
 > of this approach?
 
 _Solution_:
-Your solution here...
+This approach prevent users from using outdated algorithms proned to attacks (more robust). It also reduces the attack space as less algorithms are given as options. Finally, forward secrecy is achieved because it used ECDHE by default. 
 
 ### Question 4 (6 points)
 At USENIX '13, AlFardan, Bernstein, Paterson, Poettering, and Schuldt
