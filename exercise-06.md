@@ -119,7 +119,11 @@ may make it easier to answer questions):
 > have written the methods down in their Validation sections?
 
 _Solution_:
-Your solution here...
+If someone controls a second web server E and knows that the web browser uses cookies over another web server. 
+So that attacker would typically inject malicious Javascript code into one compromised server in the link just in 
+between the client and legitimate server. While sending a packet over TLS the attached cookie is the target of the attack.
+Indeed a Javascript code will run on the compromised server, forcing the end of a the TLS connection. In this manner, 
+the HTTP request will everytime contain the cookie with the same plain text. This can infer the attacker to recover the key.
 
 **4.2.** (2 points)
 > Single-byte biases in the RC4 cipher are stronger at the start of the
@@ -127,7 +131,11 @@ Your solution here...
 > attack.
 
 _Solution_:
-Your solution here...
+If the single-bytes biases in the RC4 cipher are stronger at the start of the keystream, a 
+possible mitigation would be to send a combination of the original cipher so that they first
+few bytes of the RC4 are no longer at the start but can be at other position of the cipher.
+Because the attack targets the first bytes of the cipher taking advantage of the weak pseudo 
+randomness of the keystream.
 
 ### Question 5 (5 points)
 One famous OpenSSL attack, Heartbleed [1], exploits some server
@@ -147,14 +155,21 @@ missing bounds check...
 > someone who logged in recently?
 
 _Solution_:
-Your solution here...
+Some servers use some implementations of keep-alive messages, and some
+connection message between the client and the server have unsufficient checks 
+at the server side leading to possible attacks. To hijack the session
+of someone is to send a heartbeat message with an injected payload to read 
+the login cookie in the server's database as recent request data are stored nearby
+and use it for furher communication. Typically the message request ask for a longer 
+cookie size then it needs (thus the server responds with someone else connection cookie). 
 
 **5.2.** (1 points)
 > Does client authentication (e.g., using client certificates) offer
 > protection against Heartbleed?
 
 _Solution_:
-Your solution here...
+No client authentication does not protect against heartbleed because it is within
+the TLS handshake prior to both parties authentication mechanism.
 
 **5.3.** (2 points) (bonus)
 > Let’s assume that you were using TLS 1.2 with ciphersuite `TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384`,
@@ -163,7 +178,7 @@ Your solution here...
 > What if you had used any of the ciphersuites of TLS 1.3?
 
 _Solution_:
-Your solution here...
+Yes — Heartbleed can leak whatever is in server memory (including long-term private keys or session keys). The TLS1.2 cipher you named (TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384) uses static ECDH (no ephemeral DH), so if the server’s private key (or the session keys) was exfiltrated an attacker who recorded the traffic could decrypt it later. There is no forward secrecy with this TLS1.2 setup.
 
 ### Question 6 (5 points)
 The Heartbleed attack we have just seen belongs to the category of
@@ -198,11 +213,12 @@ software libraries and servers.
 > ```
 
 _Solution_:
-Your solution here...
+The code contains an accidental duplicated goto fail; after the second SSLHashSHA1.update() call which unconditionally jumps to the fail label, skipping the call to SSLHashSHA1.final() and the subsequent sslRawVerify() call. This effectively bypasses the signature verification logic.
 
 **6.2.** (3 points)
 > How might an attacker take advantage of this bug? You can find a hint
 > in the method signature.
 
 _Solution_:
-Your solution here...
+An attacker could simply open a SSL connection with someone's identity because the attack can bypass the signature
+mechanism as the skips the check of the packet's signature over OpenSSL.
